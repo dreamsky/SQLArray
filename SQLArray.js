@@ -1,4 +1,3 @@
-
 /*  SQL Engine For JavaScript Array Query   */
 /*  Inspired From JsonSQL & SQLike  */
 /*  2013/05/20  */
@@ -16,14 +15,6 @@ var JSQL = {
         }
     },
     parse: function(sql){
-        var sps = this.specialsSQLs;
-        for(var i=0;i<sps.length;i++){
-            var si = sps[i];
-            if($.trim(sql.toLowerCase()) == $.trim(si.getSQL().toLowerCase())){
-                return si.fn();
-            }
-        }
-
         sql = sql.replace(/[\f\n\r\t\v]/ig,'');// SQL 语句有回车换行的情况
         var testSQL = sql.toLowerCase();
 
@@ -116,23 +107,7 @@ var JSQL = {
                 getCount = true;
             }
 
-            var res;
-            if(testSQL.indexOf('where')!=-1){
-                // where 和 order by,limit 组合的情况
-                if(testSQL.indexOf('order by')!=-1){
-                    sql = sql.replace(/where/i,'where(');
-                    sql = sql.replace(/order by/i,')order by');
-                    res = sql.match(/^(select)\s+([a-z0-9_\,\.\s\*]+)\s+from\s+([a-z0-9_,\.]+)(?: where\s*\((.+)\))?\s*(?:order\sby\s+([a-z0-9_\,]+))?\s*(asc|desc)?\s*(?:limit\s+([0-9_\,]+))?/i);
-                } else if(testSQL.indexOf('limit')!=-1){
-                    sql = sql.replace(/where/i,'where(');
-                    sql = sql.replace(/limit/i,')limit');
-                    res = sql.match(/^(select)\s+([a-z0-9_\,\.\s\*]+)\s+from\s+([a-z0-9_,\.]+)(?: where\s*\((.+)\))?\s*(?:order\sby\s+([a-z0-9_\,]+))?\s*(asc|desc)?\s*(?:limit\s+([0-9_\,]+))?/i);
-                } else {
-                    res = sql.match(/^(select)\s+([a-z0-9_\,\.\s\*]+)\s+from\s+([a-z0-9_,\.]+)(?: where\s+(.+))?\s*(?:order\sby\s+([a-z0-9_\,]+))?\s*(asc|desc)?\s*(?:limit\s+([0-9_\,]+))?/i);                    
-                }
-            } else {
-                res = sql.match(/^(select)\s+([a-z0-9_\,\.\s\*]+)\s+from\s+([a-z0-9_,\.]+)(?: where\s+(.+))?\s*(?:order\sby\s+([a-z0-9_\,]+))?\s*(asc|desc)?\s*(?:limit\s+([0-9_\,]+))?/i);
-            }
+            var res = sql.match(/^(select)\s+([a-z0-9_\,\.\s\*]+)\s+from\s+([a-z0-9_,\.]+)(?: where\s+(.+))?\s*(?:order\sby\s+([a-z0-9_\,]+))?\s*(asc|desc)?\s*(?:limit\s+([0-9_\,]+))?/i);
             var me = this;
             var ops = {
                 fields: res[2] && res[2].replace(' ','').split(','), 
